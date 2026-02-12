@@ -5,42 +5,125 @@ class Router
     public function handleRequest()
     {
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $method = $_SERVER['REQUEST_METHOD'];
 
+        // Helpers
         require_once __DIR__ . '/../app/Helpers/view.php';
+        require_once __DIR__ . '/../app/Helpers/auth.php';
 
-        // ================== Products Routes ==================
-        if ($uri === '/products') {
-            require_once __DIR__ . '/../app/Controllers/ProductController.php';
-            $controller = new ProductController();
-            $controller->index();
+        /*
+        |--------------------------------------------------------------------------
+        | Public Routes (Guest)
+        |--------------------------------------------------------------------------
+        */
 
-        } elseif ($uri === '/products/create' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-            require_once __DIR__ . '/../app/Controllers/ProductController.php';
-            $controller = new ProductController();
-            $controller->createForm();
-
-        } elseif ($uri === '/products/create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            require_once __DIR__ . '/../app/Controllers/ProductController.php';
-            $controller = new ProductController();
-            $controller->create();
-
-        } elseif ($uri === '/products/edit' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-            require_once __DIR__ . '/../app/Controllers/ProductController.php';
-            $controller = new ProductController();
-            $controller->editForm($_GET['id'] ?? null);
-
-        } elseif ($uri === '/products/edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            require_once __DIR__ . '/../app/Controllers/ProductController.php';
-            $controller = new ProductController();
-            $controller->update($_GET['id'] ?? null);
-
-        } elseif ($uri === '/products/delete') {
-            require_once __DIR__ . '/../app/Controllers/ProductController.php';
-            $controller = new ProductController();
-            $controller->delete($_GET['id'] ?? null);
-
-        } else {
-            echo "404 - Page Not Found";
+        // Home
+        if ($uri === '/') {
+            require_once __DIR__ . '/../app/Controllers/HomeController.php';
+            (new HomeController())->index();
+            return;
         }
+
+        // Register
+        if ($uri === '/register' && $method === 'GET') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/AuthController.php';
+            (new AuthController())->registerForm();
+            return;
+        }
+
+        if ($uri === '/register' && $method === 'POST') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/AuthController.php';
+            (new AuthController())->register();
+            return;
+        }
+
+        // Login
+        if ($uri === '/login' && $method === 'GET') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/AuthController.php';
+            (new AuthController())->loginForm();
+            return;
+        }
+
+        if ($uri === '/login' && $method === 'POST') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/AuthController.php';
+            (new AuthController())->login();
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Authenticated Routes
+        |--------------------------------------------------------------------------
+        */
+
+        // Logout
+        if ($uri === '/logout') {
+            requireAuth();
+            require_once __DIR__ . '/../app/Controllers/AuthController.php';
+            (new AuthController())->logout();
+            return;
+        }
+
+        // Products
+        if ($uri === '/products' && $method === 'GET') {
+            requireAuth();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->index();
+            return;
+        }
+
+        if ($uri === '/products/create' && $method === 'GET') {
+            requireAuth();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->createForm();
+            return;
+        }
+
+        if ($uri === '/products/create' && $method === 'POST') {
+            requireAuth();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->create();
+            return;
+        }
+
+        if ($uri === '/products/edit' && $method === 'GET') {
+            requireAuth();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->editForm($_GET['id'] ?? null);
+            return;
+        }
+
+        if ($uri === '/products/edit' && $method === 'POST') {
+            requireAuth();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->update($_GET['id'] ?? null);
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Admin Only Routes
+        |--------------------------------------------------------------------------
+        */
+
+        if ($uri === '/products/delete') {
+            requireAuth();
+            requireAdmin();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->delete($_GET['id'] ?? null);
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | 404
+        |--------------------------------------------------------------------------
+        */
+        http_response_code(404);
+        echo "404 - Page Not Found";
     }
 }
