@@ -7,15 +7,15 @@ require_once __DIR__ . '/../Models/User.php';
 
 class HomeController 
 {
-    private $userModel;
-
     public function __construct()
     {
-        $this->userModel = new User();
+        // session_start();
     }
 
-    public function index(){
-        $user = $this->userModel->findByEmail($_SESSION['user']);
-        return view('Home.home',['user' => $user]);
+    public function index()
+    {
+        $user = $_SESSION['user'] ?? null;
+
+        return view('Home.home', compact('user'));
     }
 }

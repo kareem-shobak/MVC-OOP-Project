@@ -9,7 +9,7 @@ class AuthController
 
     public function __construct()
     {
-        session_start();
+        // session_start();
         $this->userModel = new User();
     }
 
@@ -20,20 +20,26 @@ class AuthController
     }
 
     // Handle Register
-    public function register()
-    {
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+public function register()
+{
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-        $this->userModel->createUser([
-            'name' => $_POST['name'],
-            'email' => $_POST['email'],
-            'password' => $password
-        ]);
+    $this->userModel->createUser([
+        'name' => $_POST['name'],
+        'email' => $_POST['email'],
+        'password' => $password
+    ]);
 
-        $_SESSION['user'] = $_POST['email'];
-        header('Location: /');
-        exit;
-    }
+    // احصل على user من database
+    $user = $this->userModel->findByEmail($_POST['email']);
+
+    // خزن user كامل
+    $_SESSION['user'] = $user;
+
+    header('Location: /');
+    exit;
+}
+
 
     // Show Login Form
     public function loginForm()

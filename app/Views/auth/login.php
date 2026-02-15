@@ -87,6 +87,11 @@
         <input name="password" type="password" placeholder="Password" required>
         <button type="submit">Login</button>
     </form>
+      <!-- Login Option -->
+    <p style="margin-top:20px; font-size:0.95rem;">
+        Don't have an account ? create a new one
+        <a href="/register" style="font-weight:600;">Create new Account</a>
+    </p>
 </div>
 
 <?php endSection(); ?>

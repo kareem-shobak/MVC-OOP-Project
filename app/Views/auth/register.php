@@ -88,6 +88,11 @@
         <input name="password" type="password" placeholder="Password" required>
         <button type="submit">Register</button>
     </form>
+      <!-- Login Option -->
+    <p style="margin-top:20px; font-size:0.95rem;">
+        Already have an account?
+        <a href="/login" style="font-weight:600;">Login here</a>
+    </p>
 </div>
 
 <?php endSection(); ?>

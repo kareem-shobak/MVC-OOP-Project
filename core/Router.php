@@ -19,6 +19,7 @@ class Router
 
         // Home
         if ($uri === '/') {
+            requireAuth();
             require_once __DIR__ . '/../app/Controllers/HomeController.php';
             (new HomeController())->index();
             return;
