@@ -45,6 +45,9 @@
             font-size: 1.8rem;
             font-weight: 700;
             letter-spacing: 1px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 9px;
         }
 
         nav {
@@ -111,8 +114,8 @@
     <header>
         <h1>My MVC Project</h1>
         <nav>
-            <a href="/products" class="btn">Products</a>
             <a href="/" class="btn">Home</a>
+            <a href="/products" class="btn">Products</a>
             <a href="/logout" class="btn">Logout</a>
         </nav>
     </header>

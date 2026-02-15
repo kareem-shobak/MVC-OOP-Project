@@ -30,10 +30,10 @@ public function register()
         'password' => $password
     ]);
 
-    // احصل على user من database
+
     $user = $this->userModel->findByEmail($_POST['email']);
 
-    // خزن user كامل
+
     $_SESSION['user'] = $user;
 
     header('Location: /');
