@@ -70,4 +70,30 @@ class ProductController
         header('Location: /products');
         exit;
     }
+
+
+    /**      API       **/
+    
+    // API - Get all products
+    public function indexApi(){
+        $products = $this->productModel->all();
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'all the product returned successfuly',
+            'code' => 200,
+            'data' => $products
+        ]);
+    }
+
+    // API - Get product with ID
+    public function getProduct($id){
+        if (!$id) die('ID required');
+        $product = $this->productModel->find($id);
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'single product returned successfuly',
+            'code' => 200,
+            'data' => $product
+        ]);
+    } 
 }

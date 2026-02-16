@@ -33,6 +33,25 @@ class Router
             return;
         }
 
+
+        /**   Start   API       **/
+
+         if ($uri === '/api/products' && $method === 'GET') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->indexApi();
+            return;
+        }
+
+        if (preg_match('#^/api/products/(\d+)$#', $uri, $matches) && $method === 'GET') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            $id = $matches[1];
+            (new ProductController())->getProduct($id);
+            return;
+        }
+        /**   End   API       **/
+
         if ($uri === '/register' && $method === 'POST') {
             requireGuest();
             require_once __DIR__ . '/../app/Controllers/AuthController.php';
