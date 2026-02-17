@@ -75,7 +75,7 @@ class ProductController
     /**      API       **/
     
     // API - Get all products
-    public function indexApi(){
+    public function allProducts(){
         $products = $this->productModel->all();
         echo json_encode([
             'status' => 'success',
@@ -96,4 +96,64 @@ class ProductController
             'data' => $product
         ]);
     } 
+
+    // API - Add product
+    public function addProduct()
+    {
+        $data = 
+        [
+            'name' => $_POST['name'],
+            'price' => $_POST['price'],
+        ];
+
+        $this->productModel->create($data);
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'product added successfuly',
+            'code' => 201
+        ]);
+    }
+    
+    // API - Edit Product
+    public function editProduct($id)
+    {   
+
+        try {
+            $data = 
+        [
+            'name' => $_POST['name'],
+            'price' => $_POST['price'],
+        ];
+
+        $this->productModel->update($id,$data);
+
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'product edited successfuly',
+            'code' => 204
+        ]);
+        } catch (Exception $e) {
+            echo json_encode([
+            'status' => 'error',
+            'message' => 'product not found',
+            'code' => 404
+        ]);
+
+        }
+    }
+    
+    // API - Delete Product
+    public function deleteProduct($id)
+    {
+        $this->productModel->delete($id);
+        
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'product deleted successfuly',
+            'code' => 204
+        ]);
+
+    }
 }

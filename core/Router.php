@@ -34,23 +34,50 @@ class Router
         }
 
 
-        /**   Start   API       **/
+        /**   Start  API       **/
 
+             // display all products 
          if ($uri === '/api/products' && $method === 'GET') {
             requireGuest();
             require_once __DIR__ . '/../app/Controllers/ProductController.php';
-            (new ProductController())->indexApi();
+            (new ProductController())->allProducts();
             return;
         }
-
-        if (preg_match('#^/api/products/(\d+)$#', $uri, $matches) && $method === 'GET') {
+            // diplay a specific product 
+        if (preg_match('#^/api/product/(\d+)$#', $uri, $matches) && $method === 'GET') {
             requireGuest();
             require_once __DIR__ . '/../app/Controllers/ProductController.php';
             $id = $matches[1];
             (new ProductController())->getProduct($id);
             return;
         }
-        /**   End   API       **/
+        
+            // add new product 
+         if ($uri === '/api/add/product' && $method === 'POST') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            (new ProductController())->addProduct();
+            return;
+        }
+
+            // Edit product 
+         if (preg_match('#^/api/edit/product/(\d+)$#', $uri, $matches) && $method === 'POST') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            $id = $matches[1];
+            (new ProductController())->editProduct($id);
+            return;
+        }
+
+        if (preg_match('#^/api/delete/product/(\d+)$#', $uri, $matches) && $method === 'DELETE') {
+            requireGuest();
+            require_once __DIR__ . '/../app/Controllers/ProductController.php';
+            $id = $matches[1];
+            (new ProductController())->deleteProduct($id);
+            return;
+        }
+
+        /**   End  API       **/
 
         if ($uri === '/register' && $method === 'POST') {
             requireGuest();
