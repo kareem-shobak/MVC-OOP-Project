@@ -11,7 +11,7 @@ class ProductController
     public function __construct()
     {
         $this->productModel = new Product();
-        header("Content-Type: application/json");
+        // header("Content-Type: application/json");
     }
 
     // Read
@@ -227,6 +227,8 @@ class ProductController
         }
     }
 
+
+    // Handle JSON and Validation /
     private function getRequestData()
     {
         $input = json_decode(file_get_contents("php://input"), true);
